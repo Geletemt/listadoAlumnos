@@ -1,24 +1,19 @@
 import { Field, Form, Formik } from 'formik';
 import { useState } from 'react';
 
-export default function Formulario() {
-  const [listaAlumnos, setListaAlumnos] = useState(
-    JSON.parse(localStorage.getItem('listaAlumnos')) || []
-  );
-  const [cursos] = useState(['1ºESO','2ºESO','3ºESO','4ºESO']);
-  const [cursoSelected, setCursoSelected] = useState(cursos[0]);
+export default function Formulario(props) {
+  const { listaAlumnos,actualizarAlumnos } = props;
+  const [cursos] = useState(['1ºESO', '2ºESO', '3ºESO', '4ºESO']);
+  
 
-  const addAlumnos = () => {
-    let tempListaAlumnos = [...listaAlumnos];
-    tempListaAlumnos.push({
-      name: '',
-      Apellidos: '',
-      Edad: '',
-      Curso: '',
-      Fecha: '',
-      Nota: '',
-      Porcentaje: '',
-    });
+  const addAlumnos = (values) => {
+    console.log(listaAlumnos);
+    // console.log(values);
+    let tempListaAlumnos = [...listaAlumnos, values];
+    console.log(tempListaAlumnos);
+    localStorage.setItem('listaAlumnos', JSON.stringify(tempListaAlumnos));
+    actualizarAlumnos();
+    
   };
 
   return (
@@ -55,50 +50,110 @@ export default function Formulario() {
             <div className="modal-body">
               <Formik
                 initialValues={{
-                  Name: '',
-                  Apellidos: '',
-                  Edad: '',
-                  Curso: '',
-                  Fecha: '',
-                  Nota: '',
-                  Porcentaje: '',
+                  name: '',
+                  apellidos: '',
+                  edad: '',
+                  curso: '',
+                  fecha: '',
+                  nota: '',
+                  porcentaje: '',
                 }}
                 onSubmit={(values) => {
-                  localStorage.setItem('listaAlumnos', JSON.stringify(values));
+                  addAlumnos(values);
                 }}
               >
-                {() => (
-                  <Form>
-                    <label htmlFor="nombre">Name:</label>
-                    <Field type="text" name="Name" placeholder="Nombre" />
-                    <label htmlFor="apellidos">Surname:</label>
-                    <Field
-                      type="text"
-                      name="Apellidos"
-                      placeholder="Apellidos"
-                    />
-                    <label htmlFor="Edad">Age:</label>
-                    <Field type="number" name="Edad" placeholder="Edad" />
-                    <label htmlFor="Curso">Curso:</label>
-                    <Field as="select" name="Curso" placeholder="Curso">
-                      {cursos.map((curso, i) => (
-                        <option key={i}>{curso}</option>
-                      ))}
-                    </Field>
-                    <label htmlFor="Fecha">Fecha:</label>
-                    <Field type="date" name="Fecha" placeholder="Fecha" />
-                    <label htmlFor="Nota">Nota:</label>
-                    <Field type="number" name="Nota" placeholder="Nota" />
-                    <label htmlFor="Porcentaje">Porcentaje:</label>
-                    <Field
-                      type="number"
-                      name="Porcentaje"
-                      placeholder="Porcentaje"
-                    />
+                {({ setFieldValue, handleSubmit, errors }) => (
+                  <Form onSubmit={handleSubmit}>
+                    <div className="input-group mb-3">
+                      <span className="input-group-text" id="basic-addon1">
+                        Nombre
+                      </span>
+                      <Field
+                        type="text"
+                        className="form-control"
+                        name="name"
+                        placeholder="Nombre"
+                      />
+                    </div>
+
+                    <div className="input-group mb-3">
+                      <span className="input-group-text" id="basic-addon1">
+                        Apellidos
+                      </span>
+                      <Field
+                        type="text"
+                        className="form-control"
+                        name="apellidos"
+                        placeholder="Apellidos"
+                      />
+                    </div>
+
+                    <div className="input-group mb-3">
+                      <span className="input-group-text" id="basic-addon1">
+                        Edad
+                      </span>
+                      <Field
+                        type="number"
+                        className="form-control"
+                        name="edad"
+                        placeholder="Edad"
+                      />
+                    </div>
+                    <div className="input-group mb-3">
+                      <span className="input-group-text" id="basic-addon1">
+                        Curso
+                      </span>
+                      <Field
+                        as="select"
+                        className="form-control"
+                        name="curso"
+                        placeholder="Curso"
+                      >
+                        {cursos.map((curso, i) => (
+                          <option key={i}>{curso}</option>
+                        ))}
+                      </Field>
+                    </div>
+
+                    <div className="input-group mb-3">
+                      <span className="input-group-text" id="basic-addon1">
+                        Fecha
+                      </span>
+                      <Field
+                        type="date"
+                        className="form-control"
+                        name="fecha"
+                        placeholder="Fecha"
+                      />
+                    </div>
+
+                    <div className="input-group mb-3">
+                      <span className="input-group-text" id="basic-addon1">
+                        Nota
+                      </span>
+                      <Field
+                        type="number"
+                        className="form-control"
+                        name="nota"
+                        placeholder="Nota"
+                      />
+                    </div>
+
+                    <div className="input-group mb-3">
+                      <span className="input-group-text" id="basic-addon1">
+                        Porcentaje
+                      </span>
+                      <Field
+                        type="number"
+                        className="form-control"
+                        name="porcentaje"
+                        placeholder="Porcentaje"
+                      />
+                    </div>
                     <button
                       type="submit"
                       className="btn btn-secondary"
-                      data-bs-dismiss="modal"
+                      // data-bs-dismiss="modal"
                     >
                       Enviar
                     </button>
