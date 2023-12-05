@@ -1,10 +1,11 @@
 import { Field, Form, Formik } from 'formik';
 import { useState } from 'react';
+import * as Yup from 'yup';
 
 export default function Formulario(props) {
-  const { listaAlumnos,actualizarAlumnos } = props;
+  const { listaAlumnos, actualizarAlumnos } = props;
   const [cursos] = useState(['1ºESO', '2ºESO', '3ºESO', '4ºESO']);
-  
+  let plantillaDecimales = /^\d+(\.\d{0,2})?$/;
 
   const addAlumnos = (values) => {
     console.log(listaAlumnos);
@@ -13,11 +14,11 @@ export default function Formulario(props) {
     console.log(tempListaAlumnos);
     localStorage.setItem('listaAlumnos', JSON.stringify(tempListaAlumnos));
     actualizarAlumnos();
-    
   };
 
   return (
     <>
+      
       <button
         type="button"
         className="btn btn-primary"
@@ -58,12 +59,56 @@ export default function Formulario(props) {
                   nota: '',
                   porcentaje: '',
                 }}
+                validationSchema={Yup.object({
+                  name: Yup.string().required('Campo obligatorio'),
+                  apellidos: Yup.string().required('Campo obligatorio'),
+                  edad: Yup.number()
+                    .required('Campo obligatorio')
+                    .min(18, 'Debe Ser Mayor de edad')
+                    .max(99),
+                  curso: Yup.string().required('Campo obligatorio'),
+                  fecha: Yup.date().nullable(),
+                  nota: Yup.number().required('Campo obligatorio'),
+                  porcentaje: Yup.number().required('Campo obligatorio'),
+                })}
+                validateOnBlur={false}
+                validateOnChange={false}
                 onSubmit={(values) => {
                   addAlumnos(values);
                 }}
               >
                 {({ setFieldValue, handleSubmit, errors }) => (
                   <Form onSubmit={handleSubmit}>
+                    {errors && (
+                      <>
+                        <div>
+                          {errors.name && <span>Nombre:{errors.name}</span>}
+                        </div>
+                        <div>
+                          {errors.apellidos && (
+                            <span>Apellidos:{errors.apellidos}</span>
+                          )}
+                        </div>
+                        <div>
+                          {errors.edad && <span>Edad:{errors.edad}</span>}
+                        </div>
+                        <div>
+                          {errors.curso && <span>Curso:{errors.curso}</span>}
+                        </div>
+                        <div>
+                          {errors.fecha && <span>Fecha:{errors.fecha}</span>}
+                        </div>
+                        <div>
+                          {errors.nota && <span>Nota:{errors.edad}</span>}
+                        </div>
+                        <div>
+                          {errors.porcentaje && (
+                            <span>Porcentaje:{errors.porcentaje}</span>
+                          )}
+                        </div>
+                        <div></div>
+                      </>
+                    )}
                     <div className="input-group mb-3">
                       <span className="input-group-text" id="basic-addon1">
                         Nombre
@@ -123,6 +168,7 @@ export default function Formulario(props) {
                         type="date"
                         className="form-control"
                         name="fecha"
+                        timezone=""
                         placeholder="Fecha"
                       />
                     </div>
@@ -150,6 +196,7 @@ export default function Formulario(props) {
                         placeholder="Porcentaje"
                       />
                     </div>
+
                     <button
                       type="submit"
                       className="btn btn-secondary"

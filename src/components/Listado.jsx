@@ -1,9 +1,11 @@
 
 
-export default function Listado(props) {
-  const {listaAlumnos} = props;
-  
 
+export default function Listado(props) {
+  
+  const { listaAlumnos } = props;
+
+  const removeTodo = () => {};
   return (
     <>
       <h1>Listado de Alumnos</h1>
@@ -23,7 +25,7 @@ export default function Listado(props) {
         </thead>
         <tbody>
           {listaAlumnos.map((alumno, i) => (
-            <tr key={i}>
+            <tr key={i} >
               <th scope="row"></th>
               <td>{alumno.name}</td>
               <td>{alumno.apellidos}</td>
@@ -32,6 +34,11 @@ export default function Listado(props) {
               <td>{alumno.fecha}</td>
               <td>{alumno.nota}</td>
               <td>{alumno.porcentaje}</td>
+              <td
+                onClick={() => removeTodo()}
+                className="ri-delete-bin-line text-danger ms-3"
+                style={{ cursor: 'pointer', color: 'red' }}
+              ></td>
             </tr>
           ))}
         </tbody>
