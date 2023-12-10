@@ -1,15 +1,20 @@
-
-
+import EditAlumno from './EditAlumno';
 
 export default function Listado(props) {
-  
-  const { listaAlumnos } = props;
+  const { listaAlumnos, onActualizarAlumnos } = props;
 
-  const removeTodo = () => {};
+  const removeItem = (i) => {
+    let tempLista = [...listaAlumnos];
+    tempLista.splice(i, 1);
+    onActualizarAlumnos(tempLista);
+    localStorage.setItem('listaAlumnos', JSON.stringify(tempLista));
+  };
+
+  
   return (
     <>
+      
       <h1>Listado de Alumnos</h1>
-
       <table className="table table-striped">
         <thead>
           <tr>
@@ -21,11 +26,12 @@ export default function Listado(props) {
             <th scope="col">Fecha</th>
             <th scope="col">Nota</th>
             <th scope="col">Porcentaje</th>
+            <th scope="col">Opciones</th>
           </tr>
         </thead>
         <tbody>
-          {listaAlumnos.map((alumno, i) => (
-            <tr key={i} >
+          {listaAlumnos?.map((alumno, i) => (
+            <tr key={i}>
               <th scope="row"></th>
               <td>{alumno.name}</td>
               <td>{alumno.apellidos}</td>
@@ -33,12 +39,33 @@ export default function Listado(props) {
               <td>{alumno.curso}</td>
               <td>{alumno.fecha}</td>
               <td>{alumno.nota}</td>
-              <td>{alumno.porcentaje}</td>
-              <td
-                onClick={() => removeTodo()}
-                className="ri-delete-bin-line text-danger ms-3"
-                style={{ cursor: 'pointer', color: 'red' }}
-              ></td>
+              <td>
+                <div
+                  className="progress"
+                  role="progressbar"
+                  aria-label="Example with label"
+                  aria-valuenow="25"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  <div
+                    className="progress-bar"
+                    style={{ width: `${alumno.porcentaje}%` }}
+                  >
+                    {`${alumno.porcentaje}%`}
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div>
+                  <EditAlumno alumno={alumno} index={i} listaAlumnos={listaAlumnos} actualizarAlumnos={(values)=>onActualizarAlumnos(values)} />
+                  <i
+                    onClick={() => removeItem(i)}
+                    className="ri-delete-bin-line"
+                    style={{ cursor: 'pointer', color: 'red' }}
+                  />
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>

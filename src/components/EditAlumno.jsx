@@ -2,44 +2,37 @@ import { Field, Form, Formik } from 'formik';
 import { useState } from 'react';
 import * as Yup from 'yup';
 
-export default function Formulario(props) {
-  const { listaAlumnos, actualizarAlumnos } = props;
+export default function EditAlumno(props) {
+  const { alumno, index, listaAlumnos, actualizarAlumnos } = props;
   const [cursos] = useState(['1ºESO', '2ºESO', '3ºESO', '4ºESO']);
-  let plantillaDecimales = /^\d+(\.\d{0,2})?$/;
 
-  const addAlumnos = (values) => {
-    console.log(listaAlumnos);
-    // console.log(values);
-    let tempListaAlumnos = [...listaAlumnos, values];
-    console.log(tempListaAlumnos);
-    localStorage.setItem('listaAlumnos', JSON.stringify(tempListaAlumnos));
-    actualizarAlumnos();
+  
+  const editItem = (values) => {
+    let listaTemp = [...listaAlumnos];
+    
+    //listaTemp[index].name=values.name;
+    listaTemp[index]= values;
+    localStorage.setItem('listaAlumnos', JSON.stringify(listaTemp));
+
+    
+    // let tempAlumno= values;
+    actualizarAlumnos(listaTemp);
   };
 
   return (
     <>
-      
-      <button
-        type="button"
-        className="btn btn-primary"
+      <i
+        className="ri-edit-2-line me-3"
         data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
-      >
-        Añadir alumno
-      </button>
+        data-bs-target={`#editModal${index}`}
+      ></i>
 
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
+      <div className="modal fade" id={`editModal${index}`} tabIndex="-1">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="exampleModalLabel">
-                Añadir Alumno
+                Editar Alumno
               </h1>
               <button
                 type="button"
@@ -51,13 +44,13 @@ export default function Formulario(props) {
             <div className="modal-body">
               <Formik
                 initialValues={{
-                  name: '',
-                  apellidos: '',
-                  edad: '',
-                  curso: '',
-                  fecha: '',
-                  nota: '',
-                  porcentaje: '',
+                  name: alumno.name,
+                  apellidos: alumno.apellidos,
+                  edad: alumno.edad,
+                  curso: alumno.curso,
+                  fecha: alumno.fecha,
+                  nota: alumno.nota,
+                  porcentaje: alumno.porcentaje,
                 }}
                 validationSchema={Yup.object({
                   name: Yup.string().required('Campo obligatorio'),
@@ -74,7 +67,7 @@ export default function Formulario(props) {
                 validateOnBlur={false}
                 validateOnChange={false}
                 onSubmit={(values) => {
-                  addAlumnos(values);
+                  editItem(values);
                 }}
               >
                 {({ setFieldValue, handleSubmit, errors }) => (
@@ -189,6 +182,7 @@ export default function Formulario(props) {
                       <span className="input-group-text" id="basic-addon1">
                         Porcentaje
                       </span>
+
                       <Field
                         type="number"
                         className="form-control"

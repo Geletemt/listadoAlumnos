@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Formulario from './components/Formulario';
+import Formulario from './components/AddAlumno';
 import Listado from './components/Listado';
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
         listaAlumnos={listaAlumnos}
         actualizarAlumnos={() => actualizarNuevoAlumnos()}
       />
-      <Listado listaAlumnos={listaAlumnos} />
+      <Listado listaAlumnos={listaAlumnos} onActualizarAlumnos={(value)=>setListaAlumnos(value)} />
     </div>  
     </>
   );
